@@ -24,7 +24,22 @@ llm = ChatGroq(
 def build_search_agent():
     return create_agent(
         model = llm,
-        tools= [web_search]
+        tools= [web_search],
+        system_prompt="""
+        You are a web research agent.
+
+        Use the web_search tool to find relevant and reliable sources.
+
+        IMPORTANT:
+        Preserve every URL returned by the web_search tool.
+        Do not omit or summarize away the URLs.
+
+        Return each result in this format:
+
+        Title: ...
+        URL: ...
+        Snippet: ...
+        """
     )
 
 #2nd agent 
@@ -32,7 +47,18 @@ def build_search_agent():
 def build_reader_agent():
     return create_agent(
         model = llm,
-        tools = [scrape_url]
+        tools = [scrape_url],
+        system_prompt="""
+        You are a research reading agent.
+
+        Your job is to read a URL provided in the search results.
+
+        IMPORTANT:
+        - Identify the most relevant URL from the provided search results.
+        - You MUST call the scrape_url tool with the selected URL.
+        - Do not simply describe the URL or say that you need a URL.
+        - After scraping, analyze and return the useful information extracted from the page.
+        """
     )
 
 
