@@ -26,24 +26,20 @@ def build_search_agent():
         model = llm,
         tools= [web_search],
         system_prompt="""
-You are a raw data extractor agent.
+        You are a web research agent.
 
-CRITICAL INSTRUCTIONS:
-- You MUST call the `web_search` tool to fetch results.
-- NEVER write introductions, summaries, headings, or conclusion text.
-- ONLY output the search results using the EXACT text format below for each result. Do not alter the keys.
-- ONLY call search tool one time if gt valid response
+        Use the web_search tool to find relevant and reliable sources.
 
-Format required for EACH result:
-Title: <title here>
-URL: <url here>
-Snippet: <snippet text here>
+        IMPORTANT:
+        Preserve every URL returned by the web_search tool.
+        Do not omit or summarize away the URLs.
 
-Example Output:
-Title: Example Page
-URL: https://example.com
-Snippet: This is a snippet text from the site.
-"""
+        Return each result in this format:
+
+        Title: ...
+        URL: ...
+        Snippet: ...
+        """
     )
 
 #2nd agent 
@@ -53,14 +49,16 @@ def build_reader_agent():
         model = llm,
         tools = [scrape_url],
         system_prompt="""
-You are a research reading agent.
+        You are a research reading agent.
 
-CRITICAL INSTRUCTIONS:
-1. Carefully evaluate the search results and select EXACTLY 2 to 3 of the MOST RELEVANT, reliable, and high-quality URLs that directly answer the core user query.
-2. You MUST call the `scrape_url` tool multiple times (once for EACH of the selected URLs) BEFORE generating your final summary.
-3. DO NOT stop after scraping just one URL. You must scrape at least 2 or 3 URLs to ensure a comprehensive analysis.
-4. Combine and synthesize the content extracted from ALL scraped URLs into a unified, well-structured research analysis.
-"""
+        Your job is to read a URL provided in the search results.
+
+        IMPORTANT:
+        - Identify the most relevant URL from the provided search results.
+        - You MUST call the scrape_url tool with the selected URL.
+        - Do not simply describe the URL or say that you need a URL.
+        - After scraping, analyze and return the useful information extracted from the page.
+        """
     )
 
 

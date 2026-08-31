@@ -15,7 +15,7 @@ def run_research_pipeline(topic : str) -> dict:
     })
     state["search_results"] = search_result['messages'][-1].content
 
-    print("\n search result ",state["search_results"] )
+    print("\n search result ",search_result)
 
     #step 2 - reader agent 
     print("\n"+" ="*50)
@@ -27,7 +27,7 @@ def run_research_pipeline(topic : str) -> dict:
         "messages": [("user",
             f"Based on the following search results about '{topic}', "
             f"pick the most relevant URL and scrape it for deeper content.\n\n"
-            f"Search Results:\n{state['search_results']}"
+            f"Search Results:\n{state['search_results'][:800]}"
         )]
     })
 
